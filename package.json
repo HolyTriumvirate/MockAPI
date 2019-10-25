@@ -1,0 +1,20 @@
+{
+  "name": "MockAPI",
+  "version": "1.0.0",
+  "description": "Mock/Test API for testing the development of GraphQuill",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HolyTriumvirate/MockAPI.git"
+  },
+  "keywords": [],
+  "author": "The Holy Triumvirate",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HolyTriumvirate/MockAPI/issues"
+  },
+  "homepage": "https://github.com/HolyTriumvirate/MockAPI#readme"
+}
