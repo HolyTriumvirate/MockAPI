@@ -15,13 +15,14 @@
     "node": true,
     "es6": true
   },
-  "parser": "@typescript-eslint/parser",
-  "plugins": [ "@typescript-eslint" ],
-  "parserOptions": {
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "modules": true
-    },
-    "project": "./tsconfig.json"
-  }
+  // commented out the typescript rules
+  // "parser": "@typescript-eslint/parser",
+  // "plugins": [ "@typescript-eslint" ],
+  // "parserOptions": {
+  //   "sourceType": "module",
+  //   "ecmaFeatures": {
+  //     "modules": true
+  //   },
+  //   "project": "./tsconfig.json"
+  // }
 }
