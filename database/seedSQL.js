@@ -19,13 +19,13 @@ async function seed() {
   // console.log('full input array is', values);
 
   await Pool.query(`
-    WITH newAd AS (
+    WITH newAddress AS (
       INSERT INTO addresses(address, "address2", city, state, "zipCode") 
       VALUES ($1, $2, $3, $4, $5)
       RETURNING *
     )
     INSERT INTO customers("firstName", "lastName", "email", "addressId", "phoneNumber")
-    VALUES ($6, $7, $8, (SELECT id FROM newAd), $9)
+    VALUES ($6, $7, $8, (SELECT id FROM newAddress), $9)
     RETURNING *
     `, values)
     .then((newRow) => console.log('new customer details', newRow.rows))
