@@ -1,9 +1,7 @@
 {
   "extends": "airbnb",
   "rules": {
-    // "no-param-reassign": "off",
     // "consistent-return": "off",
-    // "no-else-return": "off",
     "no-console": "off",
     "react/prop-types": "off",
     // "linebreak-style": 0 // windows CRLF LF thing?

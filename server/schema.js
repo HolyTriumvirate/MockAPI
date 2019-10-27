@@ -1,6 +1,7 @@
-const { buildSchema } = require('graphql');
+// const { buildSchema } = require('graphql');
 
-module.exports = buildSchema(`
+// re-write to make this just a typedef
+module.exports = `
   type Customer {
     id: Int!
     firstName: String!
@@ -25,4 +26,4 @@ module.exports = buildSchema(`
     customer(id: Int!): Customer!
     customers: [Customer!]!
   }
-`);
+`;

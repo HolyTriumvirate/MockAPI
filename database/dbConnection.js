@@ -11,8 +11,8 @@ const pool = new Pool({
   ssl: true,
   max: 5, // max on free plan for elephantSQL
   min: 1,
-  idleTimeoutMillis: 1000,
-  connectionTimeoutMillis: 1000,
+  idleTimeoutMillis: 2000,
+  connectionTimeoutMillis: 2000,
 });
 
 // pool.connect().then((connectionResult) => console.log(connectionResult));
