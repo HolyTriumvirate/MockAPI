@@ -1,4 +1,3 @@
-const faker = require('faker');
 const Pool = require('./dbConnection');
 
 // note: cannot have trailing commas for the last argument (like in js)
