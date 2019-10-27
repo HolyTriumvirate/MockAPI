@@ -7,7 +7,7 @@ module.exports = buildSchema(`
     lastName: String!
     email: String!
     phoneNumber: String!
-    address: Address!
+    address: Address
   }
 
   type Address {
