@@ -25,6 +25,7 @@ async function setup() {
     `);
 
   // add foregin key constraint (only need to do this once)
+  // then again this entire file only needs to be run once...
   await Pool.query(`
     ALTER TABLE customers
     ADD CONSTRAINT addressConstraint

@@ -26,4 +26,15 @@ app.use('/graphql',
     graphiql: true,
   }));
 
+/*
+  * EXAMPLE QUERY FROM THE FRONT END (FETCH)
+  fetch('/graphql', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ query: '{ addresses { address address2 city state zipCode } }'})
+  })
+    .then(res => res.json())
+    .then(data => console.log(data))
+*/
+
 app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
