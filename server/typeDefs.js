@@ -51,5 +51,21 @@ module.exports = `
       city: String,
       state: String!,
       zipCode: String!): Customer!
-  }
-`;
+
+    updateCustomer(
+      id: Int!,
+      firstName: String, 
+      lastName: String, 
+      email: String, 
+      phoneNumber: String
+      ): Customer!
+      
+    updateAddress(
+      customerId: Int!,
+      address: String,
+      address2: String,
+      city: String,
+      state: String,
+      zipCode: String): Address!
+    }
+    `;
