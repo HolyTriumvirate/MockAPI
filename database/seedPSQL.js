@@ -20,7 +20,7 @@ async function seed() {
 
   await Pool.query(`
     WITH newAddress AS (
-      INSERT INTO addresses(address, "address2", city, state, "zipCode") 
+      INSERT INTO addresses("address", "address2", "city", "state", "zipCode") 
       VALUES ($1, $2, $3, $4, $5)
       RETURNING *
     )
@@ -29,11 +29,11 @@ async function seed() {
     RETURNING *
     `, values)
     .then((newRow) => console.log('new customer details', newRow.rows))
-    .catch((err) => console.log('ERROR ADDING CUSTOMER AND/OR ADDRESS', err));
+    .catch((err) => console.log('ERROR ADDING CUSTOMER AND/OR ADDRESS (THIS IS EXPECTED FOR SEEDING SCRIPT)', err));
 }
 
-// seed a random number of times
-const random = Math.random() * 10;
+// seed with a random number of inputs
+const random = Math.random() * 25;
 console.log(`Seeding ${Math.floor(random) + 1} values`);
 
 // EXPECT ERRORS HERE as js will create a lot of pool connections faster than they can be handled

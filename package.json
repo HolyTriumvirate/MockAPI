@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "resetPSQL": "node database/resetPSQL.js && node database/setupTablesPSQL.js && node database/seedPSQL.js"
   },
   "repository": {
     "type": "git",

@@ -61,10 +61,26 @@ module.exports = {
     },
   },
 
-  // setup all the possible mutation endpoints
-  // Mutation: {
-  //   addCustomer: (parent, args) => {
-
-  //   },
-  // },
+  // all the possible mutation endpoints
+  Mutation: {
+    addCustomerAndAddress: (parent, args, { psqlPool }) => {
+      const {
+        firstName, lastName, email, phoneNumber,
+        address, address2, city, state, zipCode,
+      } = args;
+      const query = `WITH newAddress AS (
+        INSERT INTO addresses("address", "address2", "city", "state", "zipCode") 
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING *
+      )
+      INSERT INTO customers("firstName", "lastName", "email", "addressId", "phoneNumber")
+      VALUES ($6, $7, $8, (SELECT id FROM newAddress), $9)
+      RETURNING *`;
+      const values = [
+        address, address2, city, state, zipCode,
+        firstName, lastName, email, phoneNumber,
+      ];
+      return psqlPool.query(query, values).then((res) => res.rows[0]);
+    },
+  },
 };
