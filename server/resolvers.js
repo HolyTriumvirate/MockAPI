@@ -1,5 +1,7 @@
 const Pool = require('../database/dbConnection');
 
+// NOTE: GRAPHQL plays nice with promises, so returning a promise handles asyncronicity
+
 const resolvers = {
   // the Query key sets all allowable queries that the user can make
   Query: {
@@ -13,7 +15,7 @@ const resolvers = {
         .then((data) => data.rows[0])
         .catch((err) => console.log('ERROR GETTING AN ADDRESS', err));
     },
-    // GRAPHQL plays nice with promises, so returning a promise handles asyncronicity
+
     // returns all addresses
     addresses: () => {
       // console.log('addresses queried');
@@ -22,33 +24,37 @@ const resolvers = {
         .then((data) => data.rows)
         .catch((err) => console.log('ERROR LOOKING UP ADDRESSES', err));
     },
+
+    // returns a single customer's information
     customer: (parent, args) => {
       const query = 'SELECT * FROM customers WHERE id = $1 LIMIT 1';
       const values = [args.id];
       return Pool.query(query, values)
-        .then((data) => {
-          // TODO: FIX: this is a kind of janky work around to get the address for this user
-          // const address = resolvers.Query.address(null, { id: data.rows[0].addressId });
-          // then spread the data row out into a new object with the address
-          // return { ...data.rows[0], address };
-          console.log(data.rows[0]);
-          return data.rows[0];
-        })
+        // setting the address is handled by the Customer type resolver below (built into GQL)
+        .then((data) => data.rows[0])
         .catch((err) => console.log('ERROR LOOKING UP CUSTOMER', err));
     },
-    // getting nested data (addresses of customers) is a little tricky...
+
+    // returns all customers' information
     customers: () => {
       const query = 'SELECT * FROM customers';
       return Pool.query(query)
-        .then((data) => data.rows) // this will not return addresses of each customer
+        .then((data) => data.rows)
         .catch((err) => console.log('ERROR LOOKING UP CUSTOMERS', err));
     },
   },
-  // a type def which is useful for defining the nested GQL definitions in a schema
+
+  // this is a type resolver which is useful for defining the nested GQL definitions in a schema
   // this one sets the address key/parameter of a Customer
   Customer: {
-    address: (args) => Pool.query('SELECT * FROM addresses WHERE id = $1 LIMIT 1', [args.addressId])
-      .then((data) => data.rows[0]),
+    address: (args) => {
+      const query = 'SELECT * FROM addresses WHERE id = $1 LIMIT 1';
+      const values = [args.addressId];
+      // return the async query to find the address with the appropriate addressId
+      return Pool.query(query, values)
+        .then((data) => data.rows[0])
+        .catch((err) => console.log('ERROR GETTING CUSTOMER\'S ADDRESS', err));
+    },
   },
 };
 
