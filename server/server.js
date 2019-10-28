@@ -5,8 +5,11 @@ const { makeExecutableSchema } = require('graphql-tools');
 const PORT = 3000;
 const app = express();
 
-const typeDefs = require('./schema');
+const typeDefs = require('./typeDefs');
 const resolvers = require('./resolvers');
+
+// import the pool connection
+const Pool = require('../database/dbConnection');
 
 // flow test if needed
 // app.use(express.json()); // parse req.body to json
@@ -24,6 +27,9 @@ app.use('/graphql',
   graphQLHTTP({
     schema,
     graphiql: true,
+    // refactor here to include the database connections on the context property. I think that's
+    // best practice to pass & control d-base connections and current user sessions
+    context: { psqlPool: Pool },
   }));
 
 /*

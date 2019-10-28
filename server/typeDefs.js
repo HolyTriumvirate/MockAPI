@@ -1,6 +1,10 @@
 // const { buildSchema } = require('graphql');
 
-// re-write to make this just a typedef
+// * At the bottom of the marelabs link, there is an explaination of best practices to break
+// * up the typeDefs/schema  and resolvers into separate (modular) files, that are then
+// * aggregated into one schema to be inputted as an arguement to makeExecutableSchema
+
+// refactored to make this just a typedef
 module.exports = `
   # types are similar to classes or schemas, they tell GQL what types to expect at each variable
   # they should reflect the database schema/setup VERY closely (if not identically)

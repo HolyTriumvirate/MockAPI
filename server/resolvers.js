@@ -1,62 +1,70 @@
-const Pool = require('../database/dbConnection');
+// const Pool = require('../database/dbConnection');
+// This is commented out for a refactor to use context (refer to server/server.js)
 
 // NOTE: GRAPHQL plays nice with promises, so returning a promise handles asyncronicity
 
-const resolvers = {
+module.exports = {
   // the Query key sets all allowable queries that the user can make
   Query: {
     // select a single address via id
-    address: (parent, args) => {
+    address: (parent, args, context) => {
       // set query text and values (id from arguments obj)
       const query = 'SELECT * FROM addresses WHERE id = $1 LIMIT 1';
       const values = [args.id];
       // return the async query to the d-base, parse out the only row that is returned
-      return Pool.query(query, values)
+      return context.psqlPool.query(query, values)
         .then((data) => data.rows[0])
         .catch((err) => console.log('ERROR GETTING AN ADDRESS', err));
     },
 
     // returns all addresses
-    addresses: () => {
+    addresses: (parent, args, { psqlPool }) => {
+      // alternatively, context can be destructured, but I find it less readable
       // console.log('addresses queried');
       const query = 'SELECT * FROM addresses';
-      return Pool.query(query)
+      return psqlPool.query(query)
         .then((data) => data.rows)
         .catch((err) => console.log('ERROR LOOKING UP ADDRESSES', err));
     },
 
     // returns a single customer's information
-    customer: (parent, args) => {
+    customer: (parent, args, context) => {
       const query = 'SELECT * FROM customers WHERE id = $1 LIMIT 1';
       const values = [args.id];
-      return Pool.query(query, values)
+      return context.psqlPool.query(query, values)
         // setting the address is handled by the Customer type resolver below (built into GQL)
         .then((data) => data.rows[0])
         .catch((err) => console.log('ERROR LOOKING UP CUSTOMER', err));
     },
 
     // returns all customers' information
-    customers: () => {
+    customers: (parent, args, context) => {
       const query = 'SELECT * FROM customers';
-      return Pool.query(query)
+      return context.psqlPool.query(query)
         .then((data) => data.rows)
         .catch((err) => console.log('ERROR LOOKING UP CUSTOMERS', err));
     },
   },
 
-  // this is a type resolver which is useful for defining the nested GQL definitions in a schema
-  // this one sets the address key/parameter of a Customer
+  //* This is a type resolver which is useful for defining the nested GQL definitions in a schema
+  // this one sets the address key/parameter of a Customer (to the info of an Address TYPE)
   Customer: {
-    address: (args) => {
+    // the parameters for the resolver function in a type resolver are:
+    //
+    address: (parent, args, context) => {
       const query = 'SELECT * FROM addresses WHERE id = $1 LIMIT 1';
-      const values = [args.addressId];
+      const values = [parent.addressId];
       // return the async query to find the address with the appropriate addressId
-      return Pool.query(query, values)
+      return context.psqlPool.query(query, values)
         .then((data) => data.rows[0])
         .catch((err) => console.log('ERROR GETTING CUSTOMER\'S ADDRESS', err));
     },
   },
+
+  // setup all the possible mutation endpoints
+  // Mutation: {
+  //   addCustomer: (parent, args) => {
+
+  //   },
+  // },
 };
-
-
-module.exports = resolvers;
