@@ -6,7 +6,7 @@ const PORT = 3000;
 const app = express();
 
 const typeDefs = require('./schema');
-const resolvers = require('./root');
+const resolvers = require('./resolvers');
 
 // // for flow test
 // app.use(express.json());
@@ -18,7 +18,7 @@ const resolvers = require('./root');
 // });
 
 // massively helpful resource: https://marmelab.com/blog/2017/09/06/dive-into-graphql-part-iii-building-a-graphql-server-with-nodejs.html
-// used to
+// used to get to the
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 app.use('/graphql',

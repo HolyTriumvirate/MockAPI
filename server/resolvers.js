@@ -1,10 +1,14 @@
 const Pool = require('../database/dbConnection');
 
-const root = {
+const resolvers = {
+  // the Query key sets all allowable queries that the user can make
   Query: {
+    // select a single address via id
     address: (parent, args) => {
-      const query = 'SELECT * FROM addresses WHERE id = $1';
+      // set query text and values (id from arguments obj)
+      const query = 'SELECT * FROM addresses WHERE id = $1 LIMIT 1';
       const values = [args.id];
+      // return the async query to the d-base, parse out the only row that is returned
       return Pool.query(query, values)
         .then((data) => data.rows[0])
         .catch((err) => console.log('ERROR GETTING AN ADDRESS', err));
@@ -19,14 +23,16 @@ const root = {
         .catch((err) => console.log('ERROR LOOKING UP ADDRESSES', err));
     },
     customer: (parent, args) => {
-      const query = 'SELECT * FROM customers WHERE id = $1';
+      const query = 'SELECT * FROM customers WHERE id = $1 LIMIT 1';
       const values = [args.id];
       return Pool.query(query, values)
         .then((data) => {
-          // this is a kind of janky work around to get the address for this user
-          const address = root.Query.address(null, { id: data.rows[0].addressId });
+          // TODO: FIX: this is a kind of janky work around to get the address for this user
+          // const address = resolvers.Query.address(null, { id: data.rows[0].addressId });
           // then spread the data row out into a new object with the address
-          return { ...data.rows[0], address };
+          // return { ...data.rows[0], address };
+          console.log(data.rows[0]);
+          return data.rows[0];
         })
         .catch((err) => console.log('ERROR LOOKING UP CUSTOMER', err));
     },
@@ -38,7 +44,13 @@ const root = {
         .catch((err) => console.log('ERROR LOOKING UP CUSTOMERS', err));
     },
   },
+  // a type def which is useful for defining the nested GQL definitions in a schema
+  // this one sets the address key/parameter of a Customer
+  Customer: {
+    address: (args) => Pool.query('SELECT * FROM addresses WHERE id = $1 LIMIT 1', [args.addressId])
+      .then((data) => data.rows[0]),
+  },
 };
 
 
-module.exports = root;
+module.exports = resolvers;

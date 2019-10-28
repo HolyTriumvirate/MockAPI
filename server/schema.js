@@ -3,6 +3,7 @@
 // re-write to make this just a typedef
 module.exports = `
   type Customer {
+    # for comments?
     id: Int!
     firstName: String!
     lastName: String!
