@@ -28,8 +28,8 @@ async function seed() {
     VALUES ($6, $7, $8, (SELECT id FROM newAddress), $9)
     RETURNING *
     `, values)
-    .then((newRow) => console.log('new customer details', newRow.rows))
-    .catch((err) => console.log('ERROR ADDING CUSTOMER AND/OR ADDRESS (THIS IS EXPECTED FOR SEEDING SCRIPT)', err));
+    .then((newRow) => console.log(`${newRow.rows[0].firstName} ${newRow.rows[0].lastName} was added!`))
+    .catch((err) => console.log('ERROR ADDING CUSTOMER AND/OR ADDRESS (THIS IS SOMEWHAT EXPECTED FOR SEEDING SCRIPT)', err));
 }
 
 // seed with a random number of inputs
@@ -45,4 +45,4 @@ for (let i = 0; i < random; i++) {
 // TODO I can fix this with a promise all that's fed the seed function...
 // TODO ...there are more important battles right now
 Pool.query('SELECT COUNT(*) FROM customers')
-  .then((result) => console.log('customer count is', result.rows[0].count));
+  .then((result) => console.log('The total customer count is', result.rows[0].count));

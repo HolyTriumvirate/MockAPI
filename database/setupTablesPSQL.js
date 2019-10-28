@@ -35,7 +35,7 @@ async function setup() {
     ADD CONSTRAINT addressConstraint
     FOREIGN KEY ("addressId")
     REFERENCES addresses (id)
-    `).then(() => console.log('constraint added'));
+    `).then(() => console.log('constraint added\n'));
 }
 
 setup();

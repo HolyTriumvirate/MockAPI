@@ -5,6 +5,7 @@
 
 module.exports = {
   // the Query key sets all allowable queries that the user can make
+  // queries are basically "Read" functionality
   Query: {
     // select a single address via id
     address: (parent, args, context) => {
@@ -65,6 +66,7 @@ module.exports = {
   },
 
   // all the possible mutation endpoints
+  // mutations include Create Update and Delete functionality
   Mutation: {
     addCustomerAndAddress: (parent, args, { psqlPool }) => {
       // destructuring the arguments
