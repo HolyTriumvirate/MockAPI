@@ -1,8 +1,9 @@
 const Pool = require('./dbConnection');
 
 async function resetDb() {
-  await Pool.query('DROP TABLE customers');
-  await Pool.query('DROP TABLE addresses');
+  console.log('resetting psql database...');
+  await Pool.query('DROP TABLE customers').then(() => console.log('customers table dropped'));
+  await Pool.query('DROP TABLE addresses').then(() => console.log('addresses table dropped'));
 }
 
 resetDb();

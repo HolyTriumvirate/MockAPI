@@ -41,5 +41,8 @@ for (let i = 0; i < random; i++) {
   seed();
 }
 
+// this isn't logging in the right spot because of async activity...
+// TODO I can fix this with a promise all that's fed the seed function...
+// TODO ...there are more important battles right now
 Pool.query('SELECT COUNT(*) FROM customers')
   .then((result) => console.log('customer count is', result.rows[0].count));
