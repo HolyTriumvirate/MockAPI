@@ -6,7 +6,7 @@ const PORT = 3000;
 const app = express();
 
 const typeDefs = require('./typeDefs');
-const resolvers = require('./resolvers');
+const resolvers = require('./combineResolvers');
 
 // import the pool connection
 const psqlPool = require('../database/dbConnection');
