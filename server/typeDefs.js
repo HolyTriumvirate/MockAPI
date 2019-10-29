@@ -16,7 +16,7 @@ module.exports = `
     lastName: String!
     email: String!
     phoneNumber: String!
-    address: Address
+    address: Address! 
   }
 
   type Address {
@@ -67,5 +67,10 @@ module.exports = `
       city: String,
       state: String,
       zipCode: String): Address!
+
+    # deletes customer AND associated address
+    deleteCustomer(
+      id: Int! # customer id
+    ): Int!
     }
     `;

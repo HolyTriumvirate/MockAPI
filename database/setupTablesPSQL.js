@@ -35,6 +35,7 @@ async function setup() {
     ADD CONSTRAINT addressConstraint
     FOREIGN KEY ("addressId")
     REFERENCES addresses (id)
+    ON DELETE CASCADE
     `).then(() => console.log('constraint added\n'));
 }
 

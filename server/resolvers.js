@@ -41,9 +41,20 @@ module.exports = {
     // returns all customers' information
     customers: (parent, args, context) => {
       const query = 'SELECT * FROM customers';
-      return context.psqlPool.query(query)
-        .then((data) => data.rows)
-        .catch((err) => console.log('ERROR LOOKING UP CUSTOMERS', err));
+      // using pool.connect to create an individual connection to the database, because
+      // there are some nested queries in the type resolver. This limits the number of
+      // connections to the pool to avoid "too many connections" errors
+      return context.psqlPool.connect()
+        .then((client) => client.query(query)
+          .then((data) => {
+            client.release();
+            return data.rows;
+          })
+          .catch((err) => {
+            client.release();
+            console.log('ERROR LOOKING UP CUSTOMERS', err);
+          }))
+        .catch((err) => console.log('ERROR IN customers Query', err));
     },
   },
 
@@ -58,10 +69,21 @@ module.exports = {
     address: (parent, args, context) => {
       const query = 'SELECT * FROM addresses WHERE id = $1 LIMIT 1';
       const values = [parent.addressId];
+
       // return the async query to find the address with the appropriate addressId
-      return context.psqlPool.query(query, values)
-        .then((data) => data.rows[0])
-        .catch((err) => console.log('ERROR GETTING CUSTOMER\'S ADDRESS', err));
+      // also using the connect method here to control the number of connections to the pool
+      return context.psqlPool.connect()
+        .then((client) => client.query(query, values)
+          .then((data) => {
+            client.release();
+            return data.rows[0];
+          })
+          .catch((err) => {
+            // release the client regardless of error or not, or else the pool will "drain"
+            client.release();
+            console.log('ERROR GETTING CUSTOMER\'S ADDRESS', err);
+          }))
+        .catch((err) => console.log('ERROR IN Customer Type Resolver', err));
     },
   },
 
@@ -158,6 +180,23 @@ module.exports = {
       return psqlPool.query(query, values)
         .then((res) => res.rows[0])
         .catch((err) => console.log('ERROR WHILE UPDATING CUSTOMER\'S ADDRESS: updateAddress Mutation', err));
+    },
+
+    deleteCustomer: (parent, args, { psqlPool }) => {
+      // only need to delete the address row because cascading delete is TRUE
+      const query = `DELETE FROM addresses
+        WHERE addresses.id = (
+          SELECT id FROM customers 
+          WHERE id = $1
+        )`;
+
+      // setup the values array
+      const values = [args.id];
+
+      // console.log(query, value);
+      return psqlPool.query(query, values)
+        .then((res) => res.rowCount)
+        .catch((err) => console.log('ERROR DELETING USER & ADDRESS: deleteCustomer Mutation', err));
     },
   },
 };

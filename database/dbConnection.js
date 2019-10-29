@@ -9,7 +9,7 @@ const pool = new Pool({
   host: 'salt.db.elephantsql.com',
   port: 5432,
   ssl: true,
-  max: 5, // max on free plan for elephantSQL
+  max: 4, // max on free plan for elephantSQL if 5, lowering it seems to avoid some issues...🤷‍♂️
   min: 1,
   idleTimeoutMillis: 2000,
   connectionTimeoutMillis: 2000,
