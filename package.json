@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "resetPSQL": "node database/resetPSQL.js && node database/setupTablesPSQL.js && node database/seedPSQL.js"
+    "resetPSQL": "node database/psql/resetPSQL.js && node database/psql/setupTablesPSQL.js && node database/psql/seedPSQL.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "nodemon": "^1.19.4"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-graphql": "^0.9.0",
     "faker": "^4.1.0",

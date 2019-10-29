@@ -1,12 +1,15 @@
 const { Pool } = require('pg');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 // start a new pool of connections
 const pool = new Pool({
   // update these to a .env file...
-  database: 'udfuhfqp',
-  user: 'udfuhfqp',
-  password: 'qVUVe6UoD3xUTZkc9n3ac5gkDzQAQWbc',
-  host: 'salt.db.elephantsql.com',
+  database: process.env.PSQL_DATABASE,
+  user: process.env.PSQL_USER,
+  password: process.env.PSQL_PASSWORD,
+  host: process.env.PSQL_HOST,
   port: 5432,
   ssl: true,
   max: 4, // max on free plan for elephantSQL if 5, lowering it seems to avoid some issues...🤷‍♂️
