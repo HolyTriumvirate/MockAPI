@@ -55,6 +55,7 @@ module.exports = {
       query += ' WHERE id = (SELECT id FROM foundAddress) RETURNING *';
 
       // console.log(query, values);
+
       return psqlPool.query(query, values)
         .then((res) => res.rows[0])
         .catch((err) => console.log('ERROR WHILE UPDATING CUSTOMER\'S ADDRESS: updateAddress Mutation', err));

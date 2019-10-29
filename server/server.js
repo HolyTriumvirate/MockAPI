@@ -11,7 +11,7 @@ const app = express();
 const schema = require('./schema');
 
 // import the pool connection to pass into context
-const psqlPool = require('../database/dbConnection');
+const psqlPool = require('../database/psql/dbConnection');
 
 // flow test if needed
 // app.use(express.json()); // parse req.body to json
