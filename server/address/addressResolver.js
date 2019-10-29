@@ -23,6 +23,7 @@ module.exports = {
         .catch((err) => console.log('ERROR LOOKING UP ADDRESSES', err));
     },
   },
+
   Mutation: {
     updateAddress: (parent, args, { psqlPool }) => {
       // initialize the query statement

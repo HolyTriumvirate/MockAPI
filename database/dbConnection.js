@@ -17,10 +17,4 @@ const pool = new Pool({
 
 // pool.connect().then((connectionResult) => console.log(connectionResult));
 
-// pool.query('SELECT * FROM films;')
-//   .then((data) => {
-//     console.log(data.rows);
-//   })
-//   .catch((err) => console.log(err));
-
 module.exports = pool;

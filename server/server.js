@@ -1,14 +1,16 @@
 const express = require('express');
 const graphQLHTTP = require('express-graphql');
-const { makeExecutableSchema } = require('graphql-tools');
+
+// this is being done in the combineSchema file now
+// const { makeExecutableSchema } = require('graphql-tools');
 
 const PORT = 3000;
 const app = express();
 
-const typeDefs = require('./typeDefs');
-const resolvers = require('./combineResolvers');
+// replacement for modular code/schema, creates schema in the combineSchema file
+const schema = require('./schema');
 
-// import the pool connection
+// import the pool connection to pass into context
 const psqlPool = require('../database/dbConnection');
 
 // flow test if needed
@@ -21,7 +23,7 @@ const psqlPool = require('../database/dbConnection');
 // massively helpful resource: https://marmelab.com/blog/2017/09/06/dive-into-graphql-part-iii-building-a-graphql-server-with-nodejs.html
 // makeExe.Sch. is used to combine the typeDef and resolvers. this allows us to
 // define type resolvers which are essential to relational data in my opinion...
-const schema = makeExecutableSchema({ typeDefs, resolvers });
+// const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 app.use('/graphql',
   graphQLHTTP({
