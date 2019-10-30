@@ -25,7 +25,67 @@ module.exports = {
   },
 
   Mutation: {
+    createOrUpdateAddress: async (parent, args, { psqlPool }) => {
+      const {
+        customerId, address, address2, city, state, zipCode,
+      } = args;
+
+      // query for the addressId in the customers table based on args.customerId
+      const query1 = `SELECT "addressId" FROM customers
+        WHERE id = $1`;
+      const values1 = [args.customerId];
+      // console.log(query1, values1);
+      const addressId = await psqlPool.query(query1, values1)
+        .then((res) => {
+          if (!res.rowCount) return null;
+          return res.rows[0].addressId;
+        });
+
+      // if the returned addressId is null, insert a new address, otherwise
+      if (!addressId) {
+        const queryInsert = `WITH newAddress AS (
+          INSERT INTO addresses ("address", "address2", "city", "state", "zipCode")
+          VALUES ($1, $2, $3, $4, $5)
+          RETURNING *
+          )
+          UPDATE customers SET "addressId" = (SELECT id FROM newAddress)
+          WHERE id = $6;
+          `;
+        const valuesInsert = [
+          address, address2, city, state, zipCode, customerId,
+        ];
+        // console.log(queryInsert, valuesInsert);
+        return psqlPool.query(queryInsert, valuesInsert)
+          .then((res) => res.rowCount)
+          .catch((err) => console.log('ERROR INSERTING A NEW ADDRESS', err));
+      }
+      // else there is an existing address that needs to be updated
+      const queryUpdate = `WITH foundAddress AS (
+          SELECT "addressId" AS id
+          FROM customers
+          WHERE id = $1
+          )
+          UPDATE addresses SET 
+            "address" = $2, 
+            "address2" = $3,
+            "city" = $4,
+            "state" = $5,
+            "zipCode" = $6
+          WHERE id = (SELECT id FROM foundAddress)
+          RETURNING *;
+          `;
+      const valuesUpdate = [
+        customerId, address, address2, city, state, zipCode,
+      ];
+      // console.log(queryUpdate, valuesUpdate);
+      return psqlPool.query(queryUpdate, valuesUpdate)
+        .then((res) => res.rowCount)
+        .catch((err) => console.log('ERROR updating customer address', err));
+    },
+
+    // ! DEPRECATED, but kept for reference
     updateAddress: (parent, args, { psqlPool }) => {
+      // DEPRECATED FOR createOrUpdateAddress
       // initialize the query statement
       let query = `WITH foundAddress AS (
         SELECT "addressId" as id 
@@ -59,6 +119,6 @@ module.exports = {
       return psqlPool.query(query, values)
         .then((res) => res.rows[0])
         .catch((err) => console.log('ERROR WHILE UPDATING CUSTOMER\'S ADDRESS: updateAddress Mutation', err));
-    },
+    }, // ! DEPRECATED
   },
 };

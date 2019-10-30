@@ -30,6 +30,22 @@ module.exports = {
     },
   },
   Mutation: {
+    // replacement for addCustomerAndAddress to only add the user to the psql database
+    addCustomer: (parent, args, { psqlPool }) => {
+      const {
+        firstName, lastName, email, phoneNumber,
+      } = args;
+      const query = `INSERT INTO customers ("firstName", "lastName", "email", "phoneNumber")
+        VALUES ($1, $2, $3, $4)
+        RETURNING *;`;
+      const values = [firstName, lastName, email, phoneNumber];
+      return psqlPool.query(query, values)
+        .then((res) => res.rows[0])
+        .catch((err) => console.log('ERROR ADDING CUSTOMER TO DB addCustomer mutaiton', err));
+    },
+
+    // deprecated addCustomerAndAddress because in a real app the customer info is added,
+    // and address is added upon their first order
     addCustomerAndAddress: (parent, args, { psqlPool }) => {
       // destructuring the arguments
       const {

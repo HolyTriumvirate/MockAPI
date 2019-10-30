@@ -19,13 +19,24 @@ const Address = `
   }
 
   extend type Mutation {
+    # Deprecated mutation, functionality is replaced by createOrUpdateAddress
     updateAddress(
       customerId: Int!,
       address: String,
       address2: String,
       city: String,
       state: String,
-      zipCode: String): Address!
+      zipCode: String): Address! @deprecated (reason: "Use \`createOrUpdateAddress\`")
+
+    # returns the value of updated addresses in the sql database (0 or 1)
+    createOrUpdateAddress(
+      customerId: Int!,
+      address: String!,
+      address2: String,
+      city: String!,
+      state: String!,
+      zipCode: String!): Int!
+      
   }
   `;
 

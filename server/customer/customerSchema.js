@@ -30,6 +30,7 @@ const Customer = `
     ): Customer!
     
     addCustomerAndAddress(
+      # DEPRECATED!!!
       firstName: String!, 
       lastName: String!, 
       email: String!, 
@@ -40,8 +41,9 @@ const Customer = `
       address2: String,
       city: String,
       state: String!,
-      zipCode: String!): Customer!
+      zipCode: String!): Customer! @deprecated (reason: "Use \`addCustomer\` A user should be created without an address, and the address created separately.")
 
+    # updates user information (name, email, phone no.)
     updateCustomer(
       id: Int!,
       firstName: String, 
@@ -49,7 +51,7 @@ const Customer = `
       email: String, 
       phoneNumber: String
       ): Customer!
-
+      
     # deletes customer AND associated address
     deleteCustomer(
       id: Int! # customer id

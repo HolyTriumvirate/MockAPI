@@ -1,5 +1,7 @@
 // setup a base schema that will be combined with the others
 
+// by deprecating the dummy Query and mutation, they're basically hidden in
+// the GraphiQL documentation which is nice
 const Base = `
 directive @deprecated(
   reason: String = "No longer supported"
