@@ -28,7 +28,7 @@ async function seed() {
     VALUES ($6, $7, $8, (SELECT id FROM newAddress), $9)
     RETURNING *
     `, values)
-    .then((newRow) => console.log(`${newRow.rows[0].firstName} ${newRow.rows[0].lastName} was added!`))
+    .then((newRow) => console.log(`NEW CUSTOMER ADDED: ${newRow.rows[0].firstName} ${newRow.rows[0].lastName}`))
     .catch((err) => console.log('ERROR ADDING CUSTOMER AND/OR ADDRESS (THIS IS SOMEWHAT EXPECTED FOR SEEDING SCRIPT)', err));
 }
 

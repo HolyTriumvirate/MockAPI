@@ -7,7 +7,8 @@
     "start": "nodemon server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "resetPsql": "node database/psql/resetPSQL.js && node database/psql/setupTablesPSQL.js && node database/psql/seedPSQL.js",
-    "resetMongo": "node database/mongo/resetMongoDB.js && node database/mongo/seedMongoDB.js"
+    "resetMongo": "node database/mongo/resetMongoDB.js && node database/mongo/seedMongoDB.js",
+    "resetAllDbs": "npm run resetPsql && npm run resetMongo"
   },
   "repository": {
     "type": "git",

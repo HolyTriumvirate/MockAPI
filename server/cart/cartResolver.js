@@ -78,7 +78,7 @@ module.exports = {
         {
         // options
           useFindAndModify: false,
-          select: 'customerId',
+          select: 'customerId', // select to only return the customerId field
         },
         // callback
         (err, data) => {
