@@ -36,10 +36,11 @@ async function seed() {
 // const random = Math.random() * 25;
 // console.log(`Seeding ${Math.floor(random) + 1} values`);
 console.log('Seeding 25 values');
-const random = 25;
 
-// EXPECT ERRORS HERE as js will create a lot of pool connections faster than they can be handled
-for (let i = 0; i < random; i++) {
+// // seems to be fixed:
+// // EXPECT ERRORS HERE as js will create a lot of pool connections faster than they can be handled
+// create the 25 customers in the database
+for (let i = 0; i < 25; i++) {
   seed();
 }
 

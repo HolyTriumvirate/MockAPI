@@ -16,4 +16,7 @@ type Mutation {
 }
 `;
 
+// the export is a function that returns an array, it has something to do with
+// circularly dependant schemas. It's more clear in schemas that are not the
+// base.
 module.exports = () => [Base];

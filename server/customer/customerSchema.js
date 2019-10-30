@@ -7,6 +7,8 @@ const Customer = `
   # types are similar to classes or schemas, they tell GQL what types to expect at each variable
   # they should reflect the database schema/setup VERY closely (if not identically)
   
+  # The Customer type reflects a row in the PSQL database except there is a special resolver that
+  # grabs the address from the addresses table for that nested information
   type Customer {
     id: Int!
     firstName: String!
@@ -17,11 +19,15 @@ const Customer = `
   }
 
   extend type Query {
+    # Find a single customer via their id (same as id in PSQL table)
     customer(id: Int!): Customer!
+
+    # Return information of all customers (this isn't very practical or useful, but it was easy to make and test)
     customers: [Customer!]!
   }
 
   extend type Mutation {
+    # mutation to add a new customer to the PSQL database
     addCustomer(
       firstName: String!,
       lastName: String!,
@@ -29,13 +35,13 @@ const Customer = `
       phoneNumber: String!
     ): Customer!
     
+    # Deprecated mutation that adds a customer and address simultaneously
     addCustomerAndAddress(
-      # DEPRECATED!!!
       firstName: String!, 
       lastName: String!, 
       email: String!, 
       phoneNumber: String!,
-      
+
       # address details
       address: String!,
       address2: String,
@@ -58,4 +64,7 @@ const Customer = `
     ): Int!
     }
 `;
+
+// export a function that returns the array of all the schemas that are necessary to build
+// this one (and the base schema)
 module.exports = () => [Customer, Address, Base];

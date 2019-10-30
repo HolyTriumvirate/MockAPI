@@ -1,9 +1,11 @@
 module.exports = {
   Query: {
-    // returns a single customer's information
+    // returns a single customer's information based on their id
     customer: (parent, args, context) => {
       const query = 'SELECT * FROM customers WHERE id = $1 LIMIT 1';
       const values = [args.id];
+      // graphql plays nice with promises, so the result of the returned promise is what is sent
+      //  as the response in graphql
       return context.psqlPool.query(query, values)
         // setting the address is handled by the Customer type resolver below (built into GQL)
         .then((data) => data.rows[0])
@@ -29,22 +31,33 @@ module.exports = {
         .catch((err) => console.log('ERROR IN customers Query', err));
     },
   },
+
+  // Mutations are what modifies data in the databases
   Mutation: {
     // replacement for addCustomerAndAddress to only add the user to the psql database
     addCustomer: (parent, args, { psqlPool }) => {
+      // destructure the args input
       const {
         firstName, lastName, email, phoneNumber,
       } = args;
+
+      // initalize the query message to add a row in the customers table
       const query = `INSERT INTO customers ("firstName", "lastName", "email", "phoneNumber")
         VALUES ($1, $2, $3, $4)
         RETURNING *;`;
+
+      // values are the input arguments
       const values = [firstName, lastName, email, phoneNumber];
+
+      // return the result of the query to the psql database
       return psqlPool.query(query, values)
+        // return the newly created row that comes from the query's response
         .then((res) => res.rows[0])
         .catch((err) => console.log('ERROR ADDING CUSTOMER TO DB addCustomer mutaiton', err));
     },
 
-    // deprecated addCustomerAndAddress because in a real app the customer info is added,
+    // new key-value pair = new mutation type/exposes endpoint
+    // ! DEPRECATED addCustomerAndAddress because in a real app the customer info is added,
     // and address is added upon their first order
     addCustomerAndAddress: (parent, args, { psqlPool }) => {
       // destructuring the arguments
@@ -72,9 +85,9 @@ module.exports = {
       return psqlPool.query(query, values)
         .then((res) => res.rows[0])
         .catch((err) => console.log('ERROR ADDING CUSTOMER AND ADDRESS TO DATABASE: addCustomerAndAddress Mutation', err));
-    },
+    }, // ! DEPRECATED
 
-    // new key-value pair = new mutation type/exposes endpoint
+    // mutation that updates the information of a customer
     updateCustomer: (parent, args, { psqlPool }) => {
       // initialize the query statement
       let query = 'UPDATE customers SET ';
@@ -97,11 +110,13 @@ module.exports = {
       // add in selector w/ first item in array being the id from args
       query += ' WHERE id = $1 RETURNING *';
       // console.log(query, values);
+
       // return the async call to the psql database
       return psqlPool.query(query, values)
         .then((res) => res.rows[0])
         .catch((err) => console.log('ERROR UPDATING CUSTOMER INFORMATION: updateCustomer Mutation', err));
     },
+
     deleteCustomer: (parent, args, { psqlPool }) => {
       // only need to delete the address row because cascading delete is TRUE
       const query = `DELETE FROM addresses
@@ -121,13 +136,17 @@ module.exports = {
   },
 
   //* This is a type resolver which is useful for defining the nested GQL definitions in a schema
-  // this one sets the address key/parameter of a Customer (to the info of an Address TYPE)
+  //* this one sets the address key/parameter of a Customer (to the info of an Address TYPE)
   Customer: {
-    // the parameters for the resolver function in a type resolver are:
-    // 1. the parent/previous value (the Customer is the parent of the address property)
-    // 2. arguments, I'm not sure where these get passed, but it may be the same
-    //    arguemnts that were passed into the Customer query
-    // 3. context (the databse connection in this case)
+    /**
+     * the parameters for *`ALL RESOLVER FUNCTIONS`* are:
+     * 1. the `parent`/previous value (the Customer is the parent of the address property)
+     * 2. `arguments`, I'm not sure where these get passed, but it may be the same
+     *    arguemnts that were passed into the Customer query
+     * 3. `context` (the databse connection in this case)
+     * 4. There is a fourth argument (called `info`) but it's not used for basic cases
+     */
+
     address: (parent, args, context) => {
       const query = 'SELECT * FROM addresses WHERE id = $1 LIMIT 1';
       const values = [parent.addressId];
@@ -137,8 +156,8 @@ module.exports = {
       return context.psqlPool.connect()
         .then((client) => client.query(query, values)
           .then((data) => {
-            client.release();
-            return data.rows[0];
+            client.release(); // release the pool client/connection
+            return data.rows[0]; // actual return value
           })
           .catch((err) => {
             // release the client regardless of error or not, or else the pool will "drain"

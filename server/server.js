@@ -1,13 +1,10 @@
 const express = require('express');
 const graphQLHTTP = require('express-graphql');
 
-// this is being done in the combineSchema file now
-// const { makeExecutableSchema } = require('graphql-tools');
-
-const PORT = 3000;
 const app = express();
+const PORT = 3000;
 
-// replacement for modular code/schema, creates schema in the combineSchema file
+// import in the combined schema from schema.js
 const schema = require('./schema');
 
 // import the pool connection to pass into context
@@ -16,7 +13,7 @@ const psqlPool = require('../database/psql/dbConnection');
 // import the mongo Models (they are on the export of dbConnection)
 const mongoConnectionAndModels = require('../database/mongo/dbConnection');
 
-// flow test if needed
+// flow test (if needed)
 // app.use(express.json()); // parse req.body to json
 // app.use((req, res, next) => {
 //   console.log(`METHOD: ${req.method}, \nURL: ${req.url}, \nBODY: ${JSON.stringify(req.body)}\n`);
@@ -32,17 +29,22 @@ const startServer = async () => {
   const mongo = await mongoConnectionAndModels();
   // console.log(mongo); // contains { CartModel: Model { Cart } }
 
-  // setup single graphql endpoint
+  // setup the single graphql endpoint
   app.use('/graphql',
     graphQLHTTP({
       schema,
       graphiql: true,
-      // refactor here to include the database connections on the context property. I think that's
-      // best practice to pass & control d-base connections and current user sessions
+      // best practice is to pass & control d-base connections and current user sessions via context
       context: { psqlPool, mongo },
     }));
 
-  /*
+  app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
+};
+
+// run the async function defined above to connect to mongo and run the server
+startServer();
+
+/*
   * EXAMPLE QUERY FROM THE FRONT END (FETCH)
   fetch('/graphql', {
     method: 'POST',
@@ -52,9 +54,3 @@ const startServer = async () => {
   .then(res => res.json())
   .then(data => console.log(data))
   */
-
-  app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
-};
-
-// run the async function defined above to connect to mongo and run the server
-startServer();
