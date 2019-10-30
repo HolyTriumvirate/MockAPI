@@ -46,14 +46,18 @@ module.exports = {
 
     // mutation to remove items from a cart
     // inputted arguments are the customerId and an array of itemsToRemove (all strings)
-    removeItemsFromCart: async (parent, args, { mongo }) => mongo.CartModel.findOneAndUpdate(
+    removeItemsFromCart: (parent, args, { mongo }) => mongo.CartModel.findOneAndUpdate(
       // leveraging implicit return of arrow function to return the promise of findOneAndUpdate
       {
       // conditions
         customerId: args.customerId,
       },
       { $pullAll: { products: args.itemsToRemove } }, // updateObject
-      { new: true, useFindAndModify: false }, // options
+      {
+        // options
+        new: true, // option to return the updated mongoose document (instead of before it updates)
+        useFindAndModify: false,
+      },
       (err, data) => {
       // callback
         if (err) return console.log(err);
@@ -62,6 +66,34 @@ module.exports = {
       },
     ),
 
+    deleteCart: async (parent, args, { mongo }) => {
+      let document;
+
+      // make this blocking, to set the value of document
+      await mongo.CartModel.findOneAndRemove(
+        {
+        // conditions
+          customerId: args.customerId,
+        },
+        {
+        // options
+          useFindAndModify: false,
+          select: 'customerId',
+        },
+        // callback
+        (err, data) => {
+          if (err) return console.log(err);
+          // console.log(data);
+
+          // set the value of document to the returned data from mongoose
+          document = data;
+          return data; // this also doesn't really do anything...
+        },
+      );
+
+      // return the document to satisfy the 'Cart' output of this mutation in the schema
+      return document;
+    },
   },
 
 

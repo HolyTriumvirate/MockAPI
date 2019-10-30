@@ -19,6 +19,7 @@ const Cart = `
   extend type Mutation {
     createOrUpdateCart(customerId: Int!, newItem: String!): Cart!
     removeItemsFromCart(customerId: Int!, itemsToRemove: [String!]): Cart!
+    deleteCart(customerId: Int!): Cart!
   }
   `;
 
