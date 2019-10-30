@@ -9,8 +9,13 @@ const {
   Mutation: AddressMutation,
 } = require('./address/addressResolver');
 
+const {
+  Query: CartQuery,
+  Mutation: CartMutation,
+} = require('./cart/cartResolver');
+
 module.exports = {
-  Query: { ...CustomerQuery, ...AddressQuery },
-  Mutation: { ...CustomerMutation, ...AddressMutation },
+  Query: { ...CustomerQuery, ...AddressQuery, ...CartQuery },
+  Mutation: { ...CustomerMutation, ...AddressMutation, ...CartMutation },
   Customer,
 };
