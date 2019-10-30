@@ -1,10 +1,12 @@
 module.exports = {
   Query: {
     // query to lookup a cart by customerId
-    cart: async (parent, args, { mongo }) => { // paren creates a multiline return
+    cart: async (parent, args,
+      // destructrue the CartModel out of the context parameter
+      { mongo: { CartModel } }) => {
       // use findOne to return a single mongo document which will use
       // the default resolver from GraphQL that looks up parameters via keys.
-      const queryResult = await mongo.CartModel.findOne({ customerId: args.customerId },
+      const queryResult = await CartModel.findOne({ customerId: args.customerId },
         (err, data) => {
           if (err) return console.log('ERROR IN MONOG QUERY cart Query: ', err);
           if (!data) {
@@ -25,7 +27,9 @@ module.exports = {
   },
 
   Mutation: {
-    createOrUpdateCart: async (parent, args, { mongo }) => mongo.CartModel.findOneAndUpdate({
+    createOrUpdateCart: async (parent, args,
+      // destrucutre out the Cart Model
+      { mongo: { CartModel } }) => CartModel.findOneAndUpdate({
       // conditions
       customerId: args.customerId,
     }, {
@@ -46,7 +50,7 @@ module.exports = {
 
     // mutation to remove items from a cart
     // inputted arguments are the customerId and an array of itemsToRemove (all strings)
-    removeItemsFromCart: (parent, args, { mongo }) => mongo.CartModel.findOneAndUpdate(
+    removeItemsFromCart: (parent, args, { mongo: { CartModel } }) => CartModel.findOneAndUpdate(
       // leveraging implicit return of arrow function to return the promise of findOneAndUpdate
       {
       // conditions
@@ -66,11 +70,11 @@ module.exports = {
       },
     ),
 
-    deleteCart: async (parent, args, { mongo }) => {
+    deleteCart: async (parent, args, { mongo: { CartModel } }) => {
       let document;
 
       // make this blocking, to set the value of document
-      await mongo.CartModel.findOneAndRemove(
+      await CartModel.findOneAndRemove(
         {
         // conditions
           customerId: args.customerId,

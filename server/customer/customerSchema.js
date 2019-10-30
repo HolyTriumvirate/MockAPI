@@ -1,18 +1,19 @@
 const Base = require('../baseSchema');
 const Address = require('../address/addressSchema');
 
+// NOTE: # (hashtags) are used as comments within the graphql schema
+
 const Customer = `
   # types are similar to classes or schemas, they tell GQL what types to expect at each variable
   # they should reflect the database schema/setup VERY closely (if not identically)
   
   type Customer {
-    # NOTE: hashtags(#) are used for comments
     id: Int!
     firstName: String!
     lastName: String!
     email: String!
     phoneNumber: String!
-    address: Address! 
+    address: Address # a customer doesn't NEED to have an address, i.e. you can sign up for amazon before giving them your address...
   }
 
   extend type Query {
@@ -21,6 +22,13 @@ const Customer = `
   }
 
   extend type Mutation {
+    addCustomer(
+      firstName: String!,
+      lastName: String!,
+      email: String!,
+      phoneNumber: String!
+    ): Customer!
+    
     addCustomerAndAddress(
       firstName: String!, 
       lastName: String!, 
