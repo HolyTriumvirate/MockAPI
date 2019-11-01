@@ -6,13 +6,18 @@ dotenv.config();
 
 // start a new pool of connections
 const pool = new Pool({
-  database: process.env.PSQL_DATABASE,
-  user: process.env.PSQL_USER,
-  password: process.env.PSQL_PASSWORD,
-  host: process.env.PSQL_HOST,
+  // connectionString: 'postgres://udfuhfqp:qVUVe6UoD3xUTZkc9n3ac5gkDzQAQWbc@salt.db.elephantsql.com:5432/udfuhfqp',
+  database: 'udfuhfqp',
+  user: 'udfuhfqp',
+  password: 'qVUVe6UoD3xUTZkc9n3ac5gkDzQAQWbc',
+  host: 'salt.db.elephantsql.com',
+  // database: process.env.PSQL_DATABASE,
+  // user: process.env.PSQL_USER,
+  // password: process.env.PSQL_PASSWORD,
+  // host: process.env.PSQL_HOST,
   port: 5432,
   ssl: true,
-  // max on free plan for elephantSQL if 5, lowering it seems to avoid some connection issues...🤷‍♂️
+  // max on free plan for elephantSQL if 5, lowering it seems to avoid some connection issues..
   max: 4,
   min: 1,
   idleTimeoutMillis: 1000,
