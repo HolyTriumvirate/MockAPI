@@ -4,7 +4,7 @@
   "description": "Mock/Test API for testing the development of GraphQuill",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server/server.js",
+    "start": "nodemon server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "resetPsql": "node database/psql/resetPSQL.js && node database/psql/setupTablesPSQL.js && node database/psql/seedPSQL.js",
     "resetMongo": "node database/mongo/resetMongoDB.js && node database/mongo/seedMongoDB.js",

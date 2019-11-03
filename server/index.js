@@ -66,7 +66,34 @@ startServer();
   })
   .then(res => res.json())
   .then(data => console.log(data))
+  .catch(err => console.log('ERROR!!!', err));
   */
+
+/*
+  * EXAMPLE QUERY FROM THE FRONT END FOR A MUTATION
+  fetch('/graphql', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      query: `mutation {
+        addCustomer (
+          firstName: "testing2"
+          lastName: "testingLast"
+          phoneNumber: "347-306-5701klhjkg"
+          email: "alex@al,hjkhex.com"
+        ) {
+          #asking for what data we want back
+          firstName
+          lastName
+          cart { products }
+        }
+      }`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => console.log(data))
+    .catch((err) => console.log('ERROR!!!', err));
+*/
 
 function graphQuill() {}
 graphQuill(`
