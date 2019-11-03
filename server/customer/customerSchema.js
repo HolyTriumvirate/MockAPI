@@ -1,5 +1,6 @@
 const Base = require('../baseSchema');
 const Address = require('../address/addressSchema');
+const Cart = require('../cart/cartSchema');
 
 // NOTE: # (hashtags) are used as comments within the graphql schema
 
@@ -16,6 +17,7 @@ const Customer = `
     email: String!
     phoneNumber: String!
     address: Address # a customer doesn't NEED to have an address, i.e. you can sign up for amazon before giving them your address...
+    cart: Cart
   }
 
   extend type Query {
@@ -67,4 +69,4 @@ const Customer = `
 
 // export a function that returns the array of all the schemas that are necessary to build
 // this one (and the base schema)
-module.exports = () => [Customer, Address, Base];
+module.exports = () => [Customer, Address, Cart, Base];

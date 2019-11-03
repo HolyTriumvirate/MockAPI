@@ -166,5 +166,25 @@ module.exports = {
           }))
         .catch((err) => console.log('ERROR IN Customer Type Resolver', err));
     },
+
+    cart: async (parent, args, { mongo: { CartModel } }) => {
+      const customerId = parent.id;
+
+      const queryResult = await CartModel.findOne({ customerId },
+        // await is used to block further execution and set the queryResult variable to the data
+        // that is returned from the findOne query
+        (err, data) => {
+          if (err) return console.log('ERROR IN MONOG QUERY Customer Type Resolver: ', err);
+          if (!data) {
+            return console.log('cart does not exist');
+          }
+          // return console.log('the found cart is', data);
+          return data; // I'm pretty sure this is doing nothing...
+        });
+
+      const defaultCart = { customerId: args.customerId, products: [], wishlist: [] };
+
+      return queryResult || defaultCart;
+    },
   },
 };
