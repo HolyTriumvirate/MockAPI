@@ -26,21 +26,34 @@ const mongoConnectionAndModels = require('../database/mongo/dbConnection');
 // const schema = makeExecutableSchema({ typeDefs, resolvers });
 const startServer = async () => {
   // this is asyncronous, so use await to avoid sending an unresolved promise to context in app.use
+
   const mongo = await mongoConnectionAndModels();
+
   // console.log(mongo); // contains { CartModel: Model { Cart } }
 
+  // console.log('--before default / use');
+  // THIS WAS THROWING ERRORS BECAUSE A FETCH TO ANY ENDPOINT HAS TO GO THROUGH HERE
+  // app.use('/', (req, res) => res.send('hello'));
+
+
+  console.log('--before graphql endpoint code');
   // setup the single graphql endpoint
   app.use('/graphql',
     graphQLHTTP({
       schema,
       graphiql: true,
       // best practice is to pass & control d-base connections and current user sessions via context
-      context: { psqlPool, mongo },
+      context: {
+        psqlPool,
+        mongo,
+      },
     }));
 
-  app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
+  console.log('-- before app.listen');
+  // changed from PORT to 3000
+  app.listen(3000, () => console.log(`Listening on PORT ${3000}`));
 };
-
+console.log('index.js running');
 // run the async function defined above to connect to mongo and run the server
 startServer();
 
@@ -53,4 +66,38 @@ startServer();
   })
   .then(res => res.json())
   .then(data => console.log(data))
+  .catch(err => console.log('ERROR!!!', err));
   */
+
+/*
+  * EXAMPLE QUERY FROM THE FRONT END FOR A MUTATION
+  fetch('/graphql', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      query: `mutation {
+        addCustomer (
+          firstName: "testing2"
+          lastName: "testingLast"
+          phoneNumber: "347-306-5701klhjkg"
+          email: "alex@al,hjkhex.com"
+        ) {
+          #asking for what data we want back
+          firstName
+          lastName
+          cart { products }
+        }
+      }`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => console.log(data))
+    .catch((err) => console.log('ERROR!!!', err));
+*/
+
+function graphQuill() {}
+graphQuill(`
+  {
+    customers { firstName }
+  }
+`);
