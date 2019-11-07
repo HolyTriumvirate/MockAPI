@@ -20,6 +20,19 @@ const {
   Mutation: AddressMutation,
 } = require('./address/addressResolver');
 
+// resolvers for the Warehouse type
+const {
+  Query: WarehouseQuery,
+  Mutation: WarehouseMutation,
+  Warehouse,
+} = require('./warehouse/warehouseResolver');
+
+// resolvers for the Product type
+const {
+  Query: ProductQuery,
+  Mutation: ProductMutation,
+} = require('./product/productResolver');
+
 // resolvers for the Cart type
 const {
   Query: CartQuery,
@@ -29,7 +42,12 @@ const {
 // export all of those combined (Query and Mutation are standard & build into gql, Customer
 // is a type resolver)
 module.exports = {
-  Query: { ...CustomerQuery, ...AddressQuery, ...CartQuery },
-  Mutation: { ...CustomerMutation, ...AddressMutation, ...CartMutation },
+  Query: {
+    ...CustomerQuery, ...AddressQuery, ...WarehouseQuery, ...ProductQuery, ...CartQuery,
+  },
+  Mutation: {
+    ...CustomerMutation, ...AddressMutation, ...WarehouseMutation, ...ProductMutation, ...CartMutation,
+  },
   Customer,
+  Warehouse,
 };
