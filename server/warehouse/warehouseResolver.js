@@ -7,7 +7,7 @@
 module.exports = {
   Query: {
     warehouse: (parent, args, context) => {
-      const query = 'SELECT * FROM warehouses WHERE warehouseId = $1 LIMIT 1';
+      const query = 'SELECT * FROM warehouses WHERE "warehouseId" = $1 LIMIT 1';
       const values = [args.warehouseId];
       return context.psqlPool.query(query, values)
         .then((data) => data.rows[0])
