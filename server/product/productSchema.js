@@ -35,7 +35,7 @@ const Product = `
 
     # mutation to update product information
     updateProduct(
-      id: Int!
+      productId: Int!
       name: String
       description: String
       price: Float
@@ -44,7 +44,7 @@ const Product = `
 
     # mutation to delete a product
     deleteProduct(
-      id: Int!
+      productId: Int!
     ): Product!
   }
 `;

@@ -7,7 +7,7 @@
 module.exports = {
   Query: {
     product: (parent, args, context) => {
-      const query = 'SELECT * FROM products WHERE id=$1 LIMIT 1';
+      const query = 'SELECT * FROM products WHERE "productId"=$1 LIMIT 1';
       const values = [args.productId];
 
       return context.psqlPool.query(query, values)
@@ -38,11 +38,11 @@ module.exports = {
     },
     updateProduct: (parent, args, context) => {
       let query = 'UPDATE products SET ';
-      const values = [args.id];
+      const values = [args.productId];
       let count = 2;
 
       Object.keys(args).forEach((el) => {
-        if (el !== 'id' && args[el]) {
+        if (el !== 'productId' && args[el]) {
           query += `"${el}"= $${count}, `;
           count += 1;
           values.push(args[el]);
@@ -50,7 +50,7 @@ module.exports = {
       });
 
       query = query.slice(0, query.length - 2);
-      query += ' WHERE id=$1 RETURNING *';
+      query += ' WHERE "productId"=$1 RETURNING *';
 
       return context.psqlPool.connect()
         .then((client) => client.query(query, values)
@@ -62,8 +62,8 @@ module.exports = {
         .catch((err) => console.log('ERROR CONNECTING WHILE UPDATING PRODUCT', err));
     },
     deleteProduct: (parent, args, context) => {
-      const query = 'DELETE FROM products WHERE id=$1 RETURNING *';
-      const values = [args.id];
+      const query = 'DELETE FROM products WHERE "productId"=$1 RETURNING *';
+      const values = [args.productId];
 
       return context.psqlPool.connect()
         .then((client) => client.query(query, values)
