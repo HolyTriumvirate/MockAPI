@@ -6,6 +6,7 @@ const Base = require('./baseSchema');
 // Schemas with information in Postgres
 const Address = require('./address/addressSchema');
 const Customer = require('./customer/customerSchema');
+const Warehouse = require('./warehouse/warehouseSchema');
 
 // Schema with information in Mongo
 const Cart = require('./cart/cartSchema');
@@ -17,6 +18,6 @@ const resolvers = require('./resolvers');
 // I invoke the functions here to get an iterable (array) to spread into the typeDefs array
 // There is a way to do this with just functions (which is what is exported).
 module.exports = makeExecutableSchema({
-  typeDefs: [...Base(), ...Address(), ...Customer(), ...Cart()],
+  typeDefs: [...Base(), ...Address(), ...Customer(), ...Warehouse(), ...Cart()],
   resolvers,
 });
