@@ -23,8 +23,15 @@ const {
 // resolvers for the Warehouse type
 const {
   Query: WarehouseQuery,
+  Mutation: WarehouseMutation,
   Warehouse,
 } = require('./warehouse/warehouseResolver');
+
+// resolvers for the Product type
+const {
+  Query: ProductQuery,
+  Mutation: ProductMutation,
+} = require('./product/productResolver');
 
 // resolvers for the Cart type
 const {
@@ -36,9 +43,11 @@ const {
 // is a type resolver)
 module.exports = {
   Query: {
-    ...CustomerQuery, ...AddressQuery, ...WarehouseQuery, ...CartQuery,
+    ...CustomerQuery, ...AddressQuery, ...WarehouseQuery, ...ProductQuery, ...CartQuery,
   },
-  Mutation: { ...CustomerMutation, ...AddressMutation, ...CartMutation },
+  Mutation: {
+    ...CustomerMutation, ...AddressMutation, ...WarehouseMutation, ...ProductMutation, ...CartMutation,
+  },
   Customer,
   Warehouse,
 };

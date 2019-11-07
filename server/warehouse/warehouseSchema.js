@@ -29,9 +29,8 @@ const Warehouse = `
   extend type Mutation {
     # mutation to add a new warehouse to the PSQL database
     addWarehouse(
-      warehouseId: String!
       name: String!
-      id: Int!
+      addressId: Int!
     ): Warehouse!
 
     # updates warehouse information (name or address_id)
@@ -44,7 +43,7 @@ const Warehouse = `
     # deletes warehouse (and address???)
     deleteWarehouse(
       warehouseId: Int!
-    ): Int!
+    ): Warehouse!
   }
 `;
 
