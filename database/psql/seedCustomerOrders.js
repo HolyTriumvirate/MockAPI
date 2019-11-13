@@ -1,18 +1,16 @@
 const Pool = require('./dbConnection');
 
-async function seedOrders() {
+async function seedCustomerOrders() {
   // create an array of variables to be inserted into the database
   const values = [
     Math.ceil(Math.random() * 50),
-    75 + Math.ceil(Math.random() * 114),
-    Math.ceil(Math.random() * 10),
   ];
 
   // console.log('full input array is', values);
 
   await Pool.query(`
-    INSERT INTO "orders"("customerId", "productId", "productQuantity")
-    VALUES ($1, $2, $3)
+    INSERT INTO "customerOrders"("customerId")
+    VALUES ($1)
     RETURNING *
     `, values)
     .then((newRow) => console.log(`NEW ORDER FOR CUSTOMER: ${newRow.rows[0].customerId}`))
@@ -22,13 +20,13 @@ async function seedOrders() {
 // seed with a random number of inputs
 // const random = Math.random() * 25;
 // console.log(`Seeding ${Math.floor(random) + 1} values`);
-console.log('Seeding warehouse inventory');
+console.log('Seeding customerOrders');
 
 // // seems to be fixed:
 // // EXPECT ERRORS HERE as js will create a lot of pool connections faster than they can be handled
 // create the 25 customers in the database
 for (let i = 0; i < 25; i++) {
-  seedOrders();
+  seedCustomerOrders();
 }
 
 // this isn't logging in the right spot because of async activity...
