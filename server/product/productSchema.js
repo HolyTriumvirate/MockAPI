@@ -14,6 +14,7 @@ const Product = `
     description: String!
     price: Float!
     weight: Float!
+    productQty: Int
   }
 
   extend type Query {
