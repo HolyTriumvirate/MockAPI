@@ -12,7 +12,7 @@ const Order = `
   # The Order type reflects a row in the PSQL database except there is a special resolver that grabs the customer from the customers table for that nested information
   type Order {
     orderId: Int!
-    customer: Customer!
+    customer: Customer
     products: [Product!]!
   }
 
@@ -23,6 +23,7 @@ const Order = `
     # Find all orders for a given customer by the customer's id
     customerOrders(customerId: Int!): [Order!]!
   }
+  
 `;
 
 module.exports = () => [Order, Customer, Product, Base];
