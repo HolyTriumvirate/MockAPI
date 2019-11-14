@@ -23,7 +23,19 @@ const Order = `
     # Find all orders for a given customer by the customer's id
     customerOrders(customerId: Int!): [Order!]!
   }
+
+  input OrderProduct {
+    productId: Int!
+    productQty: Int!
+  }
   
+  extend type Mutation {
+    # Create an order with a customer id and product ids
+    addOrder(
+      customerId: Int!
+      products: [OrderProduct!]!
+    ): Int!
+  }
 `;
 
 module.exports = () => [Order, Customer, Product, Base];
