@@ -24,7 +24,7 @@ module.exports = {
     },
   },
   Mutation: {
-    addOrder: (parent, args, context) => {
+    addOrder: async (parent, args, context) => {
       console.log('addOrder args are: ', args);
       // query to insert row in customerOrders table with customerId provided
       const customerOrderQuery = 'INSERT INTO "customerOrders" ("customerId") VALUES ($1) RETURNING *';
@@ -33,38 +33,46 @@ module.exports = {
       const orderProductQuery = 'INSERT INTO "orderProducts" ("productId", "productQty", "orderId") VALUES ($1, $2, $3) RETURNING *';
       // destructure customerId and products array from args
       const { customerId, products } = args;
-      // connect to pool to run multiple concurrent queries
-      return context.psqlPool.connect()
-        // run initial customerOrderQuery to create customerOrder
-        .then((client) => client.query(customerOrderQuery, [customerId])
-          // once customerOrder created, use orderId to create orderProduct rows for each
-          // product in products array
-          .then((data) => {
-            // destructure orderId off of data returned from inserting into customerOrders
-            const { orderId } = data.rows[0];
-            // only return once all queries to insert into orderProducts have resolved
-            return Promise.all(
-              // using map to create array of promises
-              products.map((product) => {
-                // destructure productId and productQty off of product
-                const { productId, productQty } = product;
-                const values = [productId, productQty, orderId];
-                // insert into orderProducts for each product
-                return client.query(orderProductQuery, values)
-                  .then((orderProductData) => {
-                    console.log(orderProductData.rows);
-                  })
-                  .catch((err) => console.log(`ERROR CREATING ORDERPRODUCT FOR PRODUCT ID ${productId}: `, err));
-              }),
-            ).then(() => {
-              // release client once all queries are complete
-              client.release();
-              return orderId;
-            })
-              .catch((err) => console.log('ERROR IN PROMISE ALL', err));
-          })
-          .catch((err) => console.log('ERROR CREATING CUSTOMER ORDER', err)))
-        .catch((err) => console.log('ERROR CONNECTING WHILE ADDING ORDER', err));
+
+      // declare client outside of try block to enable calling release() in catch block
+      let client;
+      // wrapping all async in one try block
+      // TODO: is there a better way to do this?
+      try {
+        // assign client to awaited returned value of invoking connect on psqlPool
+        client = await context.psqlPool.connect();
+        // await returned value of querying client to add customerOrder
+        const customerOrderData = await client.query(customerOrderQuery, [customerId]);
+        // destructure returned orderId off of customerOrderData
+        const { orderId } = customerOrderData.rows[0];
+        // await resolution of all promises before continuing thread of execution
+        await Promise.all(
+          // using map to return array of promises
+          products.map((product) => {
+          // destructure productId and productQty off of product
+            const { productId, productQty } = product;
+            const values = [productId, productQty, orderId];
+            // insert into orderProducts for each product
+            return client.query(orderProductQuery, values)
+              // still using then here because it allows for more specific error messaging and isn't too nested
+              // TODO: is this even necessary?
+              .then((orderProductData) => {
+                console.log(orderProductData.rows);
+              })
+              .catch((err) => console.log(`ERROR CREATING ORDERPRODUCT FOR PRODUCT ID ${productId}: `, err));
+          }),
+        );
+        // release client after all orderProduct queries resolve and return orderId
+        client.release();
+        return orderId;
+      } catch (err) { // handle errors in try block
+        // if client is truthy, release it
+        if (client) client.release();
+        // log error
+        console.log('ERROR WITH ASYNC IN ADD ORDER TWO', err);
+      }
+      // return null to keep eslint happy
+      return null;
     },
   },
   Order: {
