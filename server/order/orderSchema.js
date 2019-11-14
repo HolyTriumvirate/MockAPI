@@ -12,7 +12,7 @@ const Order = `
   # The Order type reflects a row in the PSQL database except there is a special resolver that grabs the customer from the customers table for that nested information
   type Order {
     orderId: Int!
-    customer: Customer!
+    customer: Customer
     products: [Product!]!
   }
 
@@ -22,6 +22,19 @@ const Order = `
 
     # Find all orders for a given customer by the customer's id
     customerOrders(customerId: Int!): [Order!]!
+  }
+
+  input OrderProduct {
+    productId: Int!
+    productQty: Int!
+  }
+  
+  extend type Mutation {
+    # Create an order with a customer id and product ids
+    addOrder(
+      customerId: Int!
+      products: [OrderProduct!]!
+    ): Int!
   }
 `;
 
