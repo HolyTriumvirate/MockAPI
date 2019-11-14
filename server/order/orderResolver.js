@@ -40,10 +40,13 @@ module.exports = {
           // once customerOrder created, use orderId to create orderProduct rows for each
           // product in products array
           .then((data) => {
-            console.log('order created??? ', data.rows);
+            // destructure orderId off of data returned from inserting into customerOrders
             const { orderId } = data.rows[0];
+            // only return once all queries to insert into orderProducts have resolved
             return Promise.all(
+              // using map to create array of promises
               products.map((product) => {
+                // destructure productId and productQty off of product
                 const { productId, productQty } = product;
                 const values = [productId, productQty, orderId];
                 // insert into orderProducts for each product
@@ -54,6 +57,7 @@ module.exports = {
                   .catch((err) => console.log(`ERROR CREATING ORDERPRODUCT FOR PRODUCT ID ${productId}: `, err));
               }),
             ).then(() => {
+              // release client once all queries are complete
               client.release();
               return orderId;
             })
