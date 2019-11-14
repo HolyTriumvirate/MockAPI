@@ -19,6 +19,7 @@ describe('testing customer Query', () => {
             firstName: 'bob',
             lastName: 'roberts',
             email: 'bob@bob.com',
+            phoneNumber: '212-332-3094',
           }],
         });
       }
@@ -30,6 +31,7 @@ describe('testing customer Query', () => {
         firstName: 'bob',
         lastName: 'roberts',
         email: 'bob@bob.com',
+        phoneNumber: '212-332-3094',
       });
     });
   });
