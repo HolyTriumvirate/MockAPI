@@ -30,6 +30,7 @@ const {
 // resolvers for the Order type
 const {
   Query: OrderQuery,
+  Mutation: OrderMutation,
   Order,
 } = require('./order/orderResolver');
 
@@ -60,6 +61,7 @@ module.exports = {
     ...CustomerMutation,
     ...AddressMutation,
     ...WarehouseMutation,
+    ...OrderMutation,
     ...ProductMutation,
     ...CartMutation,
   },
