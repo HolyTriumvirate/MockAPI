@@ -54,7 +54,8 @@ module.exports = {
             const values = [productId, productQty, orderId];
             // insert into orderProducts for each product
             return client.query(orderProductQuery, values)
-              // still using then here because it allows for more specific error messaging and isn't too nested
+              // still using then here because it allows for
+              // more specific error messaging and isn't too nested
               // TODO: is this even necessary?
               .then((orderProductData) => {
                 console.log(orderProductData.rows);

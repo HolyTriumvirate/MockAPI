@@ -1,5 +1,6 @@
 const express = require('express');
 const graphQLHTTP = require('express-graphql');
+const path = require('path');
 
 const app = express();
 const PORT = 3000;
@@ -49,10 +50,18 @@ const startServer = async () => {
       },
     }));
 
+  app.use('/build', express.static(path.resolve(__dirname, '../build')));
+
+  app.get('/', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../index.html'));
+  });
+
   console.log('-- before app.listen');
   // changed from PORT to 3000
   app.listen(3000, () => console.log(`Listening on PORT ${3000}`));
 };
+
+
 console.log('index.js running');
 // run the async function defined above to connect to mongo and run the server
 startServer();
@@ -98,6 +107,22 @@ startServer();
 function graphQuill() {}
 graphQuill(`
   {
-    customers { firstName }
+    customer (id: 10) {
+      firstName
+      lastName
+      email
+      phoneNumber
+      address {
+        address
+        address2
+      }
+    }
+  }
+`);
+graphQuill(`
+  {
+    warehouse (warehouseId: 5) {
+      name
+    }
   }
 `);

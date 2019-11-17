@@ -6,13 +6,24 @@
     "react/prop-types": "off",
     // "linebreak-style": 0 // windows CRLF LF thing?
     "func-names": "off",
-    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }] // allows for i++ or i-- in third arg of for loop
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }] ,
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]// allows for i++ or i-- in third arg of for loop
   },
   "env": {
     "browser": true,
     "node": true,
     "es6": true
   },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "react"
+  ]
   // commented out the typescript rules
   // "parser": "@typescript-eslint/parser",
   // "plugins": [ "@typescript-eslint" ],

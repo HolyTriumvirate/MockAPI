@@ -1,0 +1,8 @@
+body {
+  background-color: aqua;
+}
+
+.products-container {
+  display: flex;
+  flex-flow: row wrap;
+}
