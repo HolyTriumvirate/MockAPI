@@ -18,18 +18,24 @@ async function seedCustomers() {
 
   // console.log('full input array is', values);
 
-  await Pool.query(`
-    WITH newAddress AS (
-      INSERT INTO addresses("address", "address2", "city", "state", "zipCode") 
-      VALUES ($1, $2, $3, $4, $5)
-      RETURNING *
-    )
-    INSERT INTO customers("firstName", "lastName", "email", "addressId", "phoneNumber")
-    VALUES ($6, $7, $8, (SELECT id FROM newAddress), $9)
-    RETURNING *
-    `, values)
-    .then((newRow) => console.log(`NEW CUSTOMER ADDED: ${newRow.rows[0].firstName} ${newRow.rows[0].lastName}`))
-    .catch((err) => console.log('ERROR ADDING CUSTOMER AND/OR ADDRESS (THIS IS SOMEWHAT EXPECTED FOR SEEDING SCRIPT)', err));
+  await Pool.connect()
+    .then((client) => {
+      client.query(`
+        WITH newAddress AS (
+          INSERT INTO addresses("address", "address2", "city", "state", "zipCode") 
+          VALUES ($1, $2, $3, $4, $5)
+          RETURNING *
+          )
+          INSERT INTO customers("firstName", "lastName", "email", "addressId", "phoneNumber")
+          VALUES ($6, $7, $8, (SELECT id FROM newAddress), $9)
+          RETURNING *
+      `, values)
+        .then((newRow) => console.log(`NEW CUSTOMER ADDED: ${newRow.rows[0].firstName} ${newRow.rows[0].lastName}`))
+        .catch((err) => console.log('ERROR ADDING CUSTOMER AND/OR ADDRESS (THIS IS SOMEWHAT EXPECTED FOR SEEDING SCRIPT)', err))
+        .finally(() => {
+          client.release();
+        });
+    });
 }
 
 // seed with a random number of inputs

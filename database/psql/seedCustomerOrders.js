@@ -3,7 +3,7 @@ const Pool = require('./dbConnection');
 async function seedCustomerOrders() {
   // create an array of variables to be inserted into the database
   const values = [
-    Math.ceil(Math.random() * 50),
+    Math.ceil(Math.random() * 25),
   ];
 
   // console.log('full input array is', values);
@@ -14,7 +14,7 @@ async function seedCustomerOrders() {
     RETURNING *
     `, values)
     .then((newRow) => console.log(`NEW ORDER FOR CUSTOMER: ${newRow.rows[0].customerId}`))
-    .catch((err) => console.log('ERROR ADDING ORDER (THIS IS SOMEWHAT EXPECTED FOR SEEDING SCRIPT)', err));
+    .catch((err) => console.log('ERROR ADDING ORDER', err));
 }
 
 // seed with a random number of inputs

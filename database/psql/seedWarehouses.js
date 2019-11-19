@@ -20,7 +20,7 @@ async function seedWarehouses() {
       VALUES ($1, $2, $3, $4, $5)
       RETURNING *
     )
-    INSERT INTO warehouses("name", "address_id")
+    INSERT INTO warehouses("name", "addressId")
     VALUES ($6, (SELECT id FROM newAddress))
     RETURNING *
     `, values)

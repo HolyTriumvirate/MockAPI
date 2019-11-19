@@ -51,7 +51,7 @@ const startServer = async () => {
 
   console.log('-- before app.listen');
   // changed from PORT to 3000
-  app.listen(3000, () => console.log(`Listening on PORT ${3000}`));
+  app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
 };
 console.log('index.js running');
 // run the async function defined above to connect to mongo and run the server
