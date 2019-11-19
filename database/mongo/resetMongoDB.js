@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const mongoConnection = require('./dbConnection');
 
 const reset = async () => {
+  console.log('connecting in resetMongoDB.js');
   await mongoConnection();
   // await CartModel.deleteMany({}, (err) => {
   //   if (err) console.log('ERROR RESETTING MONGODB', err);
