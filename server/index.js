@@ -105,6 +105,7 @@ startServer();
 */
 
 function graphQuill() {}
+
 graphQuill(`
   {
     customer (id: 10) {
@@ -119,6 +120,7 @@ graphQuill(`
     }
   }
 `);
+
 graphQuill(`
   {
     warehouse (warehouseId: 5) {
