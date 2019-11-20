@@ -1,11 +1,12 @@
 {
-  "name": "mock-api",
+  "name": "mock-graphquill-api",
   "version": "1.0.0",
-  "description": "Mock/Test API for testing the development of GraphQuill",
+  "description": "Mock/Test API for testing during the development of GraphQuill",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server/index.js",
+    "start": "node server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server/index.js",
     "resetPsql": "node database/psql/resetPSQL.js && node database/psql/setupTablesPSQL.js && node database/psql/seedCustomers.js && node database/psql/seedProducts.js && node database/psql/seedCustomerOrders.js && node database/psql/seedOrderProducts.js && node database/psql/seedWarehouses.js && node database/psql/seedWarehouseInventory.js",
     "resetMongo": "node database/mongo/resetMongoDB.js && node database/mongo/seedMongoDB.js",
     "resetDbs": "npm run resetPsql && npm run resetMongo"
