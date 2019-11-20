@@ -14,18 +14,22 @@ async function seedWarehouses() {
 
   // console.log('full input array is', values);
 
-  await Pool.query(`
-    WITH newAddress AS (
-      INSERT INTO addresses("address", "address2", "city", "state", "zipCode") 
-      VALUES ($1, $2, $3, $4, $5)
-      RETURNING *
-    )
-    INSERT INTO warehouses("name", "address_id")
-    VALUES ($6, (SELECT id FROM newAddress))
-    RETURNING *
-    `, values)
-    .then((newRow) => console.log(`NEW WAREHOUSE ADDED: ${newRow.rows[0].name}`))
-    .catch((err) => console.log('ERROR ADDING CUSTOMER AND/OR ADDRESS (THIS IS SOMEWHAT EXPECTED FOR SEEDING SCRIPT)', err));
+  await Pool.connect()
+    .then(async (client) => {
+      await client.query(`
+        WITH newAddress AS (
+          INSERT INTO addresses("address", "address2", "city", "state", "zipCode") 
+          VALUES ($1, $2, $3, $4, $5)
+          RETURNING *
+          )
+          INSERT INTO warehouses("name", "addressId")
+          VALUES ($6, (SELECT id FROM newAddress))
+          RETURNING *
+      `, values)
+        .then((newRow) => console.log(`NEW WAREHOUSE ADDED: ${newRow.rows[0].name}`))
+        .finally(() => client.release());
+    })
+    .catch((err) => console.log('ERROR ADDING WAREHOUSE', err));
 }
 
 // seed with a random number of inputs

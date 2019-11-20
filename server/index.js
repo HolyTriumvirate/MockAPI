@@ -51,7 +51,7 @@ const startServer = async () => {
 
   console.log('-- before app.listen');
   // changed from PORT to 3000
-  app.listen(3000, () => console.log(`Listening on PORT ${3000}`));
+  app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
 };
 
 // async function that delays how long until the server runs, for testing
@@ -107,24 +107,14 @@ startServer();
 function graphQuill() {}
 graphQuill(`
   {
-    customer (id: 10) { 
-      firstName 
-      lastName
-      email
-      phoneNumber
-      address {
-        address
-        address2
-        city
-        state
-        zipCode
+    customerOrders(customerId: 2) {
+      orderId
+      customer {
+        firstName
+      }
+      products {
+        name
       }
     }
   }
 `);
-
-graphQuill(`{
-  warehouse (warehouseId: 5) {
-    name 
-  }
-}`);

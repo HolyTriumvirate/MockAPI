@@ -13,13 +13,17 @@ async function seedProducts() {
 
   // console.log('full input array is', values);
 
-  await Pool.query(`
-    INSERT INTO products("name", "description", "price", "weight")
-    VALUES ($1, $2, $3, $4)
-    RETURNING *
-    `, values)
-    .then((newRow) => console.log(`NEW PRODUCT ADDED: ${newRow.rows[0].name}`))
-    .catch((err) => console.log('ERROR ADDING PRODUCT (THIS IS SOMEWHAT EXPECTED FOR SEEDING SCRIPT)', err));
+  await Pool.connect()
+    .then(async (client) => {
+      await client.query(`
+        INSERT INTO products("name", "description", "price", "weight")
+        VALUES ($1, $2, $3, $4)
+        RETURNING *
+        `, values)
+        .then((newRow) => console.log(`NEW PRODUCT ADDED: ${newRow.rows[0].name}`))
+        .catch((err) => console.log('ERROR ADDING PRODUCT', err))
+        .finally(() => client.release());
+    });
 }
 
 // seed with a random number of inputs
@@ -39,5 +43,5 @@ for (let i = 0; i < 250; i++) {
 // TODO ...there are more important battles right now
 // Note: this actually isn't too far off because seed runs asyncronously and each
 // query is being awaited separately
-Pool.query('SELECT COUNT(*) FROM products')
-  .then((result) => console.log('The total product count is', result.rows[0].count));
+// Pool.query('SELECT COUNT(*) FROM products')
+//   .then((result) => console.log('The total product count is', result.rows[0].count));
