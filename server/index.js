@@ -53,7 +53,16 @@ const startServer = async () => {
   // changed from PORT to 3000
   app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
 };
-console.log('index.js running');
+
+// async function that delays how long until the server runs, for testing
+// async function breakShit() {
+//   return new Promise((resolve) => {
+//     setTimeout(() => { resolve(); }, 5000);
+//   });
+// }
+// breakShit().then(() => startServer());
+
+
 // run the async function defined above to connect to mongo and run the server
 startServer();
 
@@ -98,6 +107,24 @@ startServer();
 function graphQuill() {}
 graphQuill(`
   {
-    customers { firstName }
+    customer (id: 10) { 
+      firstName 
+      lastName
+      email
+      phoneNumber
+      address {
+        address
+        address2
+        city
+        state
+        zipCode
+      }
+    }
   }
 `);
+
+graphQuill(`{
+  warehouse (warehouseId: 5) {
+    name 
+  }
+}`);
