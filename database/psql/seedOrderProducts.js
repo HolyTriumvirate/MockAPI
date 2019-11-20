@@ -3,20 +3,24 @@ const Pool = require('./dbConnection');
 async function seedCustomerOrders() {
   // create an array of variables to be inserted into the database
   const values = [
-    76 + Math.ceil(Math.random() * 115),
+    Math.ceil(Math.random() * 250),
     Math.ceil(Math.random() * 15),
     Math.ceil(Math.random() * 25),
   ];
 
   // console.log('full input array is', values);
 
-  await Pool.query(`
-    INSERT INTO "orderProducts"("productId", "productQty", "orderId")
-    VALUES ($1, $2, $3)
-    RETURNING *
-    `, values)
-    .then((newRow) => console.log(`NEW PRODUCT FOR ORDER: ${newRow.rows[0].productId}`))
-    .catch((err) => console.log('ERROR ADDING ORDER PRODUCT (THIS IS SOMEWHAT EXPECTED FOR SEEDING SCRIPT)', err));
+  await Pool.connect()
+    .then(async (client) => {
+      await client.query(`
+        INSERT INTO "orderProducts"("productId", "productQty", "orderId")
+        VALUES ($1, $2, $3)
+        RETURNING *
+        `, values)
+        .then((newRow) => console.log(`NEW PRODUCT FOR ORDER: ${newRow.rows[0].orderId}`))
+        .finally(client.release());
+    })
+    .catch((err) => console.log('ERROR ADDING PRODUCT TO ORDER', err, '\n\n VALUES ARE \n', values));
 }
 
 // seed with a random number of inputs

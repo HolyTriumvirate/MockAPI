@@ -10,7 +10,7 @@ module.exports = {
   Query: {
     // select a single address via id in the PSQL table
     address: (parent, args, context) => {
-      console.log('args: ', args);
+      // console.log('args: ', args);
       // set query text and values (id from arguments obj)
       const query = 'SELECT * FROM addresses WHERE id = $1 LIMIT 1';
       const values = [args.id];
