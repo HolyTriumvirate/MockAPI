@@ -2,7 +2,7 @@ const express = require('express');
 const graphQLHTTP = require('express-graphql');
 
 const app = express();
-const PORT = 3000;
+// const PORT = 3000;
 
 // import in the combined schema from schema.js
 const schema = require('./schema');
