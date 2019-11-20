@@ -1,11 +1,11 @@
 const { Pool } = require('pg');
 
-const yourUsername = 'chao';
-const yourPassword = 'Potato26!!';
+const yourUsername = 'graphquill';
+const yourPassword = 'graphquill';
 
 // start a new pool of connections
 const pool = new Pool({
-  connectionString: `postgres://${yourUsername}:${yourPassword}!!@localhost/graphquillmockapi`,
+  connectionString: `postgres://${yourUsername}:${yourPassword}!!@localhost/graphquillpsql`,
 });
 
 // export the pool, it can be queried directly, or clients/connections can be "checked out",

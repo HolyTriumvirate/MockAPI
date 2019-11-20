@@ -4,12 +4,10 @@ const mongoConnection = require('./dbConnection');
 
 console.log('Seeding MongoDB with random carts for 25 customers');
 
-// removed this so that every cart will have something...
-// console.log('Some carts will be skipped to model empty carts');
-
+// async function that will seed the mongo Cart collection
 const seed = async (count) => {
   const { CartModel } = await mongoConnection();
-  console.log('in seed');
+
   for (let i = 0; i < count; i++) {
     // create a products array of 1 - 5 items
     const productsArray = [
@@ -19,9 +17,7 @@ const seed = async (count) => {
       Math.random() > 0.5 ? faker.commerce.productName() : '',
       Math.random() > 0.5 ? faker.commerce.productName() : '',
     ];
-    // console.log(productsArray);
 
-    // if cart is empty, skip them
     // eslint-disable-next-line no-await-in-loop
     await CartModel.create({
       customerId: i,
@@ -37,8 +33,3 @@ const seed = async (count) => {
 };
 
 seed(25);
-
-
-console.log('post seed');
-
-// // TODO add a disconnect here so I can stop terminating (ctrl + c) out of the terminal

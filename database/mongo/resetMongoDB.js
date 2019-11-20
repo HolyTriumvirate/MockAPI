@@ -1,16 +1,11 @@
 const mongoose = require('mongoose');
 const mongoConnection = require('./dbConnection');
 
+// function def that is async to control the thread of execution
 const reset = async () => {
-  console.log('connecting in resetMongoDB.js');
   await mongoConnection();
-  // await CartModel.deleteMany({}, (err) => {
-  //   if (err) console.log('ERROR RESETTING MONGODB', err);
-  //   else console.log('model emptied');
-  // });
-  // console.log(mongoose.modelNames());
-  // await mongoose.deleteModel('Cart');
-  // console.log(mongoose.modelNames());
+
+  // drop the carts collection to wipe all data
   await mongoose.connection.dropCollection('carts', (err, result) => {
     if (err) return console.log(err);
     return console.log('collection deleted:', result);
