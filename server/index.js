@@ -8,7 +8,7 @@ const app = express();
 const schema = require('./schema');
 
 // import the pool connection to pass into context
-const psqlPool = require('../database/psql/dbConnection');
+const psqlPool = require('../database/psql_docker/psqlModel');
 
 // import the mongo Models (they are on the export of dbConnection)
 const mongoConnectionAndModels = require('../database/mongo/dbConnection');
@@ -51,7 +51,7 @@ const startServer = async () => {
 
   console.log('-- before app.listen');
   // changed from PORT to 3000
-  app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
+  app.listen(3000, () => console.log(`Listening on PORT ${3000}`));
 };
 
 // async function that delays how long until the server runs, for testing
@@ -107,7 +107,7 @@ startServer();
 function graphQuill() {}
 graphQuill(`
   {
-    customerOrders(customerId: 2) {
+    customerOrders(customerId: 5) {
       orderId
       customer {
         firstName
